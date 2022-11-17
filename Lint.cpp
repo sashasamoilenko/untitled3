@@ -24,11 +24,11 @@ public:
     }
 
     Lint operator*(Lint other) {
-        Lint res;
-        int carry, d;
+        Lint res, res1;
+        int carry, d, counter = 0;
 
         int max_len = digits.size() > other.digits.size() ? digits.size() : other.digits.size();
-        vector<int>inter (2 * max_len);
+        vector<int> inter(2 * max_len);
 
         for (int i = 0; i < 2 * max_len; ++i) {
             inter[i] = 0;
@@ -38,8 +38,8 @@ public:
             carry = 0;
             for (int j = 0; j < other.digits.size(); ++j) {
                 d = inter[i + j] + digits[i] * other.digits[j] + carry;
-                inter[i + j] = d%10;
-                carry = d/10;
+                inter[i + j] = d % 10;
+                carry = d / 10;
             }
             inter[i + other.digits.size()] += carry;
         }
@@ -48,7 +48,7 @@ public:
             res.digits.push_back(inter[i]);
         }
 
-        return res;
+        return cut_null(res);
 
     }
 
@@ -79,29 +79,13 @@ public:
                 res.digits.push_back(d);
             }
 
-            if (res.digits.size() == 1){
-                return res;
-            }
-            else{
-                int i = res.digits.size()-1;
-                while (res.digits[i] == 0) {
-                    counter += 1;
-                    i -= 1;
-                }
-
-                for (int i = 0; i < res.digits.size()-counter; ++i){
-                    res1.digits.push_back(res.digits[i]);
-                }
-            }
-
-            return res1;
+            return cut_null(res);
         }
         catch (const char *exception) {
             std::cerr << "Error: " << exception << '\n';
         }
         return Lint();
     }
-
 
     Lint operator+(Lint other) {
         Lint res;
@@ -215,4 +199,27 @@ public:
     friend Lint S_S (Lint a, Lint b);
     friend Lint div_rest (Lint a, Lint b);
     friend bool Ferma (Lint p);
+    friend Lint cut_null(Lint a);
 };
+
+Lint cut_null(Lint a) {
+    int counter = 0;
+    Lint res;
+
+    if (a.digits.size() == 1) {
+        return a;
+    }
+    else {
+        int i = a.digits.size() - 1;
+        while (a.digits[i] == 0) {
+            counter += 1;
+            i -= 1;
+        }
+    }
+
+    for (int i = 0; i < a.digits.size() - counter; ++i) {
+        res.digits.push_back(a.digits[i]);
+    }
+
+    return res;
+}
