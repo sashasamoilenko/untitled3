@@ -170,21 +170,23 @@ public:
         return res;
     }
 
-    Lint operator/(int a) {
-        Lint res;
-        vector<int> mid (digits.size());
 
-        for (int i = digits.size() - 1; i > 0; --i){
+    Lint operator/(int a) {
+        Lint res, res1;
+        int counter = 0;
+        vector<int> mid(digits.size());
+
+        for (int i = digits.size() - 1; i > 0; --i) {
             mid[i] = digits[i] / a;
-            digits[i-1] = digits[i-1] + (digits[i] % a)*10;
+            digits[i - 1] = digits[i - 1] + (digits[i] % a) * 10;
         }
         mid[0] = digits[0] / a;
 
-        for (int i = 0; i < mid.size() ; ++i) {
+        for (int i = 0; i < mid.size(); ++i) {
             res.digits.push_back(mid[i]);
         }
 
-        return res;
+        return cut_null(res);
     }
 
     void print() {
